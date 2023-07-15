@@ -9,19 +9,15 @@
       const input = document.getElementById("file-input");
       const message = document.getElementById("message");
 
-      input.addEventListener("change", (e) => {
+      input.addEventListener("change", async (e) => {
         const file = e.target.files[0];
-        const fr = new FileReader();
-        fr.onload = () => {
-          const rawText = fr.result;
-          try {
-            JSON.parse(rawText);
-            message.innerHTML = `<div>Valid <code>JSON</code> ✅<div/>`;
-          } catch (e) {
-            message.innerHTML = `<div>Invalid <code>JSON</code> ❌<div/>`;
-          }
-        };
-        fr.readAsText(file, "UTF-8");
+        const text = await file.text();
+        try {
+          JSON.parse(text);
+          message.innerHTML = `<div>Valid <code>JSON</code> ✅<div/>`;
+        } catch (e) {
+          message.innerHTML = `<div>Invalid <code>JSON</code> ❌<div/>`;
+        }
       });
     </script>
     <style>
@@ -37,17 +33,6 @@
       }
       h1 {
         font-size: 30px;
-        text-align: center;
-      }
-      label {
-        cursor: pointer;
-        background-color: #ff7746;
-        padding: 8px;
-        border-radius: 6px;
-        text-align: center;
-      }
-      input {
-        display: none;
       }
       code {
         border-radius: 3px;
@@ -57,7 +42,6 @@
       }
       #message {
         padding-top: 20px;
-        text-align: center;
         font-size: 20px;
         font-weight: 500;
       }
@@ -66,7 +50,7 @@
   <body>
     <div class="container">
       <h1><code>JSON</code> validator</h1>
-      <label for="file-input">Select JSON</label>
+
       <input name="file" accept=".json" type="file" id="file-input" />
       <div id="message" class="message" />
     </div>
